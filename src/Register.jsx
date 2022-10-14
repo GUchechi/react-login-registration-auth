@@ -32,7 +32,33 @@ const Register = () => {
       userRef.current.focus();
   }, [])
 
-  
+  // UseEffect for validating userName
+
+    useEffect(() => {
+      const result = USER_REGEX.test(user);
+      console.log(result);
+      console.log(user);
+      setValidName(result);
+  }, [user])
+
+  // UseEffect for validating Password
+
+
+      useEffect(() => {
+        const result = PWD_REGEX.test(pwd);
+        console.log(result);
+        console.log(pwd);
+        setValidPwd(result);
+        const match = pwd === matchPwd
+        setValidMatch(match);
+    }, [pwd, matchPwd])
+
+    // UseEffect for Error message
+
+        useEffect(() => {
+          setErrMsg('');
+      }, [user, pwd, matchPwd])
+
   return (
     <div>Register</div>
   )
