@@ -1,20 +1,28 @@
 import {React, useRef, useState, useEffect} from 'react'
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import Axios from './api/Axios';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+// const REGISTER_URL = '/register';
 
 
 const Register = () => {
 
     const userRef = useRef();
     const errRef = useRef();
+    const emailRef = useRef();
 
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
+    
+    const [userEmail, setUserEmail] = useState('')
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
@@ -32,6 +40,12 @@ const Register = () => {
       userRef.current.focus();
   }, [])
 
+  // UseEffect for Email focus
+
+  useEffect (() => {
+    emailRef.current.focus();
+  }, [])
+
   // UseEffect for validating userName
 
     useEffect(() => {
@@ -40,6 +54,16 @@ const Register = () => {
       console.log(user);
       setValidName(result);
   }, [user])
+
+
+  // UseEffect for validating Email
+
+    useEffect(() => { 
+      const result = EMAIL_REGEX.test(userEmail);
+      console.log(result);
+      console.log(userEmail);
+      setValidEmail(result);
+    }, [userEmail])
 
   // UseEffect for validating Password
 
@@ -57,19 +81,20 @@ const Register = () => {
 
         useEffect(() => {
           setErrMsg('');
-      }, [user, pwd, matchPwd])
+      }, [user, pwd, matchPwd, userEmail])
 
       const handleSubmit = async (e) => {
         e.preventDefault(); 
         // if button enabled with JS hack
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
-        if (!v1 || !v2) {
+        const v3 = EMAIL_REGEX.test(userEmail);
+        if (!v1 || !v2 || !v3) {
             setErrMsg("Invalid Entry");
             return;
         }
         setSuccess(true)
-        console.log(user,pwd)
+        console.log(user,pwd, userEmail)
       }
 
   return (
@@ -115,7 +140,38 @@ const Register = () => {
                     Must begin with a letter.<br />
                     Letters, numbers, underscores, hyphens allowed.
                   </p>
+                    {/* Email */}
 
+                    <label htmlFor="username">
+                    Email :
+                      <span>
+                        <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
+                      </span>
+                      <span>
+                        <FontAwesomeIcon icon={faTimes} className={validEmail || !userEmail ? "hide" : "invalid"} />
+                      </span>
+                  </label>
+
+                  <input
+                    type="email"
+                    id="email"
+                    ref={emailRef}
+                    autoComplete="off"
+                    onChange={(e) => setUserEmail(e.target.value)}
+                    value={userEmail}
+                    required
+                    aria-invalid={validEmail ? "false" : "true"}
+                    aria-describedby="uidnote"
+                    onFocus={() => setEmailFocus(true)}
+                    onBlur={() => setEmailFocus(false)}
+                  />
+
+                    <p id="uidnote" className={emailFocus && userEmail && !validEmail ? "instructions" : "offscreen"}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    4 to 24 characters.<br />
+                    Must begin with a letter.<br />
+                    Letters, numbers, underscores, hyphens allowed.
+                  </p>
                   {/* Password */}
                   <label htmlFor="password">
                     Password:
