@@ -168,9 +168,7 @@ const Register = () => {
 
                     <p id="uidnote" className={emailFocus && userEmail && !validEmail ? "instructions" : "offscreen"}>
                     <FontAwesomeIcon icon={faInfoCircle} />
-                    4 to 24 characters.<br />
-                    Must begin with a letter.<br />
-                    Letters, numbers, underscores, hyphens allowed.
+                    Email field must be complete!!!<br />
                   </p>
                   {/* Password */}
                   <label htmlFor="password">
